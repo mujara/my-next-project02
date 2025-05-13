@@ -1,19 +1,38 @@
-import style from "./page.module.css";
-import Image from "next/image";
+import styles from './page.module.css'
+import Image from 'next/image'
 
-export default function Home() {
+import { getNewsList } from '@/app/_libs/microcms'
+import { TOP_NEWS_LIMIT } from '@/app/_constants'
+import NewsList from '@/app/_components/NewsList'
+import ButtonLink from '@/app/_components/ButtonLink'
+
+export const revalidate = 60
+
+export default async function Home() {
+  const data = await getNewsList({
+    limit: TOP_NEWS_LIMIT,
+  })
   return (
-    <section className={style.top}>
+    <>
+    <section className={styles.top}>
       <div>
-        <h1 className={style.title}>テクノロジーの力で世界を変える</h1>
-        <p className={style.description}>あああああああ</p>
+        <h1 className={styles.title}>テクノロジーの力で世界を変える</h1>
+        <p className={styles.description}>あああああああ</p>
       </div>
       <Image
-        className={style.bgimg}
+        className={styles.bgimg}
         src="/img-mv.jpg"
         alt=""
         fill
       />
     </section>
+      <section className={styles.news}>
+        <h2 className={styles.newsTitle}>News</h2>
+        <NewsList news={data.contents} />
+        <div className={styles.newsLink}>
+          <ButtonLink href="/news">もっとみる</ButtonLink>
+        </div>
+      </section>
+    </>
   );
 }
